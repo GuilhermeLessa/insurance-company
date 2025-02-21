@@ -1,0 +1,67 @@
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+import { inject, ref } from "vue";
+import Toaster from "../components/Toaster/Toaster.vue";
+import Login, { LoginInput } from "../../application/usecase/Login";
+
+const router = useRouter();
+const toaster: Toaster = ref();
+
+const email = ref("");
+const password = ref("");
+
+const loginUseCase: Login = inject("loginUseCase");
+
+async function onClickLogin() {
+    const input: LoginInput = { email: email.value, password: password.value };
+    const authenticationResult = await loginUseCase.execute(input);
+    if (authenticationResult.isRight()) {
+        router.push("/quotation");
+        return;
+    }
+
+    const error = authenticationResult.value;
+    toaster.value.error(error.message || "Authentication error.");
+}
+</script>
+
+<template>
+    <div data-bs-theme="dark">
+        <div class="container mt-5">
+            <h1 class="mb-3">Login</h1>
+            <form @submit.prevent>
+                <div class="form-group">
+                    <input type="text" class="form-control" rows="3" placeholder="Email" v-model="email" />
+                </div>
+                <div class="form-group mt-3">
+                    <input type="password" class="form-control" rows="3" placeholder="Password" v-model="password" />
+                </div>
+                <div class="d-flex flex-column mt-3">
+                    <button type="button" class="btn btn-light " @click="onClickLogin()">
+                        Login
+                    </button>
+                    <RouterLink class="d-flex justify-content-end mt-4" to="/register">
+                        <i class="bi bi-plus-circle"></i> &nbsp; Create account
+                    </RouterLink>
+                </div>
+            </form>
+        </div>
+    </div>
+    <Toaster ref="toaster"></Toaster>
+</template>
+
+<style scoped>
+.container {
+    max-width: 480px;
+    color: white;
+    background-color: #363d45;
+    padding: 30px;
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+</style>

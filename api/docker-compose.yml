@@ -1,0 +1,55 @@
+services:
+
+  php:
+    container_name: insurance-php
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./src:/var/www
+    networks:
+      - api-insurance-network
+
+  nginx:
+    container_name: insurance-nginx
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    tty: true
+    ports:
+      - '8080:80'
+    volumes:
+      - ./src:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - api-insurance-network
+
+  mysql:
+    container_name: insurance-mysql
+    image: mysql:8.4.2
+    restart: always
+    tty: true
+    volumes:
+      - insurance-volume:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - api-insurance-network
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: insurance
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+networks:
+  api-insurance-network:
+    name: insurance-network
+    driver: bridge
+
+volumes:
+  insurance-volume:
+    driver: local

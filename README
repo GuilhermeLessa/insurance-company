@@ -1,0 +1,140 @@
+
+# Running backend containers
+
+       On /api directory, run these commands on CLI:
+
+              docker compose build
+              docker compose up
+              docker exec insurance-php composer install
+              docker exec insurance-php php artisan migrate
+              docker exec insurance-php php artisan db:seed
+
+
+
+# Running frontend container
+
+       On /web directory, run these commands on CLI:
+
+              docker compose build
+              docker compose up
+
+
+
+# Ready to go
+
+       That's all you need to access the application on browser: http://localhost:5173.
+       Users to login and test (or create a new user account):
+
+              email:        admin@admin.com
+              password:     123456
+
+
+
+# Reeinstall if its necessary
+
+       If something gets wrong you must clean all to try reinstall:
+
+              docker compose down
+              docker volume rm api_insurance-volume
+
+
+
+# Running automated tests
+
+       Take a look on test coverage results in /test-coverage-result/index.html.
+
+       After run up the backend containers, run this command on CLI:
+
+              docker exec insurance-php php artisan test
+              docker exec insurance-php php artisan test --coverage-html=test-coverage-result
+       
+       Know that tests will erase all database, to recover state just run seeds again:
+
+              docker exec insurance-php php artisan db:seed
+
+
+
+# Testing enpoints with postman
+
+       Theres complete postman collections on folder /postman, you can import. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------
+
+# Useful instructions
+
+       Steps to install laravel sanctum:
+
+              docker exec insurance-php composer create-project laravel/laravel .
+
+              docker exec insurance-php php artisan install:api
+
+              docker exec insurance-php composer update
+
+              docker exec insurance-php php artisan migrate
+
+              docker exec insurance-php php artisan db:seed
+

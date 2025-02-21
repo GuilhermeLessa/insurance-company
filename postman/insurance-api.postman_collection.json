@@ -1,0 +1,280 @@
+{
+	"info": {
+		"_postman_id": "c7039d6a-11c4-4321-a5e3-7418680ac0f3",
+		"name": "insurance-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19444354"
+	},
+	"item": [
+		{
+			"name": "/sanctum/csrf-cookie",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiUrl}}/sanctum/csrf-cookie",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"sanctum",
+						"csrf-cookie"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableUrlEncoding": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "admin@admin.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12345678",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{apiUrl}}/login",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/logout",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{apiUrl}}/logout",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/authenticated",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{apiUrl}}/authenticated",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"authenticated"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/quotation",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableUrlEncoding": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"age\": \"29,39\",\n    \"currency_id\": \"EUR\",\n    \"start_date\": \"2020-10-01\",\n    \"end_date\": \"2020-10-30\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiUrl}}/api/quotation",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"api",
+						"quotation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"teste2\",\n    \"email\": \"teste2@teste.com\",\n    \"password\": \"12345678\",\n    \"password_confirmation\": \"12345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiUrl}}/register",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"const jar = pm.cookies.jar();",
+					"",
+					"const webUrl = pm.variables.get(\"webUrl\");",
+					"",
+					"jar.get(webUrl, \"XSRF-TOKEN\", (err, cookie) => {",
+					"",
+					"    console.log(err, cookie);",
+					"",
+					"    pm.request.addHeader({",
+					"        key: \"X-XSRF-TOKEN\",",
+					"        value: 'eyJpdiI6IlFEMW41MUlyZGdQbzdIWTV3bzArL0E9PSIsInZhbHVlIjoiTlk4K0txV243bEFQVURKZlpEUEdZRGxWWlJXVlVWVjBqWDY5ZEFiMVNZUEpPZ05tSGJROTQzUXRSdW1ueURzbWd5aW1uUE4rWXdlZkxGMGUwS2JLVk5sZnBzQU8yek9kbDB5dG5xVUlPNmNhdXRXYm5uT0Q4UHhScEZRbXZrem4iLCJtYWMiOiI3Yzk1YmEwOWM2MmQ2OWQyZGMzMjkxYTZjMzI5YTcyOTNkNTBiYjhjZWI0ZTVkOWQ4YzhhOTcxNzZmMDRkZTJhIiwidGFnIjoiIn0'",
+					"    })",
+					"",
+					"    pm.request.addHeader({",
+					"        key: \"Referer\",",
+					"        value: webUrl",
+					"    })",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "webUrl",
+			"value": "http://localhost:5173",
+			"type": "string"
+		}
+	]
+}

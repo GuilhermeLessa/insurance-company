@@ -1,0 +1,56 @@
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue';
+import RegisterView from '../views/RegisterView.vue';
+import QuotationView from '../views/QuotationView.vue';
+import type CheckIsAuthenticated from '@/application/usecase/CheckIsAuthenticated';
+
+const routerProvider = (
+  checkIsAuthenticatedUseCase: CheckIsAuthenticated
+) => {
+
+  const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+      {
+        path: '/',
+        name: 'home',
+        component: HomeView,
+        beforeEnter: async (to, from, next) => {
+          const isAuthenticated = await checkIsAuthenticatedUseCase.execute();
+          if (isAuthenticated.isRight()) {
+            return next('/quotation');
+          }
+          return next();
+        }
+      },
+      {
+        path: '/register',
+        name: 'register',
+        component: RegisterView,
+        beforeEnter: async (to, from, next) => {
+          const isAuthenticated = await checkIsAuthenticatedUseCase.execute();
+          if (isAuthenticated.isRight()) {
+            return next('/quotation');
+          }
+          return next();
+        }
+      },
+      {
+        path: '/quotation',
+        name: 'quotation',
+        component: QuotationView,
+        beforeEnter: async (to, from, next) => {
+          const isAuthenticated = await checkIsAuthenticatedUseCase.execute();
+          if (isAuthenticated.isLeft()) {
+            return next('/');
+          }
+          return next();
+        }
+      }
+    ]
+  });
+
+  return router;
+}
+
+export default routerProvider
