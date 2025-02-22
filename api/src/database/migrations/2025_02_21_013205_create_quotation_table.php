@@ -15,9 +15,7 @@ return new class extends Migration
     {
         Schema::create('quotation', function (Blueprint $table) {
             $table->id();
-            $table->string('rate');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->integer('rate');
             $table->string('currency_id');
             $table->decimal('total', 8, 2);
             $table->foreignIdFor(User::class, 'agent_id');

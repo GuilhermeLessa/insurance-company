@@ -4,66 +4,72 @@ namespace App\UseCases;
 
 use DateTime;
 
-use App\Domain\Entities\AgeLoad\AgeLoadInterface;
-use App\Repositories\QuotationRepository;
-use App\Repositories\PersonalQuotationRepository;
 use App\Domain\Entities\Quotation;
-use App\Domain\Entities\PersonalQuotation;
-use App\Models\QuotationModel;
-use App\Repositories\Interfaces\PersonalQuotationRepositoryInterface;
+use App\Domain\Entities\Traveler;
+use App\Domain\Entities\TravelerAge;
+use App\Domain\Entities\TravelPeriod;
+use App\Repositories\QuotationRepository;
+use App\Repositories\TravelerQuotationRepository;
 use App\Repositories\Interfaces\QuotationRepositoryInterface;
+use App\Repositories\Interfaces\TravelerQuotationRepositoryInterface;
+use App\Models\QuotationModel;
 
 class QuotationUseCase
 {
 
     private QuotationRepositoryInterface $quotationRepository;
-    private PersonalQuotationRepositoryInterface $personalQuotationRepository;
-    private AgeLoadInterface $age_load;
+    private TravelerQuotationRepositoryInterface $travelerQuotationRepository;
 
     function __construct(
         QuotationRepository $quotationRepository,
-        PersonalQuotationRepository $personalQuotationRepository,
-        AgeLoadInterface $age_load
+        TravelerQuotationRepository $travelerQuotationRepository,
     ) {
         $this->quotationRepository = $quotationRepository;
-        $this->personalQuotationRepository = $personalQuotationRepository;
-        $this->age_load = $age_load;
+        $this->travelerQuotationRepository = $travelerQuotationRepository;
     }
 
     function execute(
         array $ages,
         string $currency_id,
-        Datetime $start_date,
-        Datetime $end_date,
-        string $agentId
+        DateTime $start_date,
+        DateTime $end_date,
+        int $agent_id
     ): QuotationUseCaseOutput {
 
-        $quotation = new Quotation($this->age_load, $ages, $currency_id, $start_date, $end_date);
-        $quotationTotal = $quotation->getTotal();
+        $quotation = new Quotation($currency_id, $agent_id);
+
+        foreach ($ages as $age) {
+            $quotation->addTraveler(
+                new Traveler(
+                    new TravelerAge($age),
+                    new TravelPeriod($start_date, $end_date)
+                )
+            );
+        }
 
         /** @var QuotationModel $quotationModel */
         $quotationModel = $this->quotationRepository->save(
             Quotation::RATE,
-            $currency_id,
-            $start_date,
-            $end_date,
-            $quotationTotal,
-            $agentId
+            $quotation->getCurrencyId(),
+            $quotation->getTotal(),
+            $quotation->getAgentId()
         );
 
-        /** @var PersonalQuotation $personalQuotation */
-        foreach ($quotation->getPersonalQuotations() as $personalQuotation) {
-            $this->personalQuotationRepository->save(
+        /** @var Traveler $traveler */
+        foreach ($quotation->getTravelers() as $traveler) {
+            $this->travelerQuotationRepository->save(
                 $quotationModel->id,
-                $personalQuotation->getAge(),
-                $personalQuotation->getAgeLoadFare(),
-                $personalQuotation->getTotal()
+                $traveler->getTravelPeriod()->getStartDate(),
+                $traveler->getTravelPeriod()->getEndDate(),
+                $traveler->getTravelerAge()->getAge(),
+                $traveler->getTravelerAge()->getLoad(),
+                $traveler->getInsuranceCoast()
             );
         }
 
         return new QuotationUseCaseOutput(
-            $quotationTotal,
-            $currency_id,
+            $quotation->getTotal(),
+            $quotation->getCurrencyId(),
             $quotationModel->id
         );
     }

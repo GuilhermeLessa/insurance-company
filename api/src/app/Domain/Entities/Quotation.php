@@ -4,44 +4,56 @@ namespace App\Domain\Entities;
 
 use DateTime;
 
-use App\Domain\Entities\AgeLoad\AgeLoadInterface;
-use App\Domain\Entities\PersonalQuotation;
-use DomainException;
+use App\Domain\Exceptions\InvalidCurrencyIdException;
+use App\Domain\Entities\Traveler;
 
 class Quotation
 {
 
     const RATE = 3;
+    private string $currency_id;
     private float $total = 0;
+    private int $agent_id;
 
-    /** @var PersonalQuotation[] $personalQuotation */
-    private array $personalQuotations = [];
+    /** @var Traveler[] $travelers */
+    private array $travelers = [];
 
     function __construct(
-        AgeLoadInterface $age_load,
-        array $ages,
         string $currency_id,
-        Datetime $start_date,
-        Datetime $end_date
+        int $agent_id
     ) {
         if (!in_array($currency_id, ['EUR', 'GBP', 'USD'])) {
-            throw new DomainException('Currency id must be either “EUR”, ”GBP” or “USD"');
+            throw new InvalidCurrencyIdException('Currency id must be either “EUR”, ”GBP” or “USD"');
         }
 
-        foreach ($ages as $age) {
-            $personalQuotation = new PersonalQuotation($age_load, $age, $start_date, $end_date);
-            $this->total += $personalQuotation->getTotal();
-            $this->personalQuotations[] = $personalQuotation;
-        }
+        $this->currency_id = $currency_id;
+        $this->agent_id = $agent_id;
     }
 
-    function getPersonalQuotations(): array
+    function getCurrencyId(): string
     {
-        return $this->personalQuotations;
+        return $this->currency_id;
+    }
+
+    function addTraveler(Traveler $traveler)
+    {
+        $this->total += $traveler->getInsuranceCoast();
+        $this->total = round($this->total * 10) / 10;
+        $this->travelers[] = $traveler;
+    }
+
+    function getTravelers(): array
+    {
+        return $this->travelers;
     }
 
     function getTotal(): float
     {
-        return round($this->total * 10) / 10;
+        return $this->total;
+    }
+
+    function getAgentId(): int
+    {
+        return $this->agent_id;
     }
 }

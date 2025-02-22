@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('personal_quotation', function (Blueprint $table) {
+        Schema::create('traveler_quotation', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(QuotationModel::class, 'quotation_id');
-            $table->string('age');
-            $table->string('age_load_fare');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->integer('age');
+            $table->decimal('age_load_fare', 1, 1);
             $table->decimal('total', 8, 2);
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personal_quotation');
+        Schema::dropIfExists('traveler_quotation');
     }
 };
