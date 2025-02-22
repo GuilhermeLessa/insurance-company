@@ -5,7 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 use App\Domain\Entities\AgeLoad\AgeLoadInterface;
-use App\Domain\Entities\AgeLoad\AgeLoadCached;
+//use App\Domain\Entities\AgeLoad\AgeLoadCached;
 use App\Domain\Entities\AgeLoad\AgeLoadHardcoded;
 
 class AgeLoadProvider extends ServiceProvider

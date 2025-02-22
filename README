@@ -23,10 +23,10 @@
 # Ready to go
 
        That's all you need to access the application on browser: http://localhost:5173.
-       Users to login and test (or create a new user account):
+       User to login and test (or create a new user account):
 
               email:        admin@admin.com
-              password:     123456
+              password:     12345678
 
 
 
@@ -43,9 +43,12 @@
 
        Take a look on test coverage results in /test-coverage-result/index.html.
 
-       After run up the backend containers, run this command on CLI:
+       To run all tests again, after build up the backend containers, run this command on CLI:
 
               docker exec insurance-php php artisan test
+              
+              or 
+              
               docker exec insurance-php php artisan test --coverage-html=test-coverage-result
        
        Know that tests will erase all database, to recover state just run seeds again:
@@ -54,9 +57,13 @@
 
 
 
-# Testing enpoints with postman
+# Resources
 
-       Theres complete postman collections on root path that you can import. 
+       You can see some screenshots on /resources folder if you don't want run all of it just to check the application working on. 
+
+       If you are curious about the requirements of the job test, theres a code challenge description on /resources folder.
+
+       Theres a complete postman collection on /resources folder that you can import to try backend api.
 
 
 

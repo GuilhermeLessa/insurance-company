@@ -20,8 +20,8 @@ class AgeLoadCached implements AgeLoadInterface
     {
         /*
             Just an example of different implementation 
-            of age load using cache or database
-            and using AgeLoadProvider
+            of age load using providers to easily switch 
+            betweeen cache, database or hardcode
         */
         return end($this->fares);
     }
