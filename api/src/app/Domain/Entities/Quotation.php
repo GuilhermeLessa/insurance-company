@@ -5,6 +5,7 @@ namespace App\Domain\Entities;
 use DateTime;
 
 use App\Domain\Exceptions\InvalidCurrencyIdException;
+use App\Domain\Exceptions\InvalidAgentIdException;
 use App\Domain\Entities\Traveler;
 
 class Quotation
@@ -24,6 +25,9 @@ class Quotation
     ) {
         if (!in_array($currency_id, ['EUR', 'GBP', 'USD'])) {
             throw new InvalidCurrencyIdException('Currency id must be either “EUR”, ”GBP” or “USD"');
+        }
+        if (!(intval($agent_id) > 0)) {
+            throw new InvalidAgentIdException("Agent id must be a valid integer greater then zero");
         }
 
         $this->currency_id = $currency_id;

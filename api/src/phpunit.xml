@@ -8,6 +8,12 @@
         <testsuite name="Domain">
             <directory>tests/Domain</directory>
         </testsuite>
+        <testsuite name="UseCases">
+            <directory>tests/UseCases</directory>
+        </testsuite>
+        <testsuite name="Transformers">
+            <directory>tests/Transformers</directory>
+        </testsuite>
     </testsuites>
     <source>
         <include>
