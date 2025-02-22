@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Exception;
-use DateTime;
 
 use App\UseCases\QuotationUseCase;
 use App\UseCases\QuotationUseCaseOutput;
 use App\Domain\Exceptions\Base\DomainException;
+use App\Http\Requests\QuotationRequest;
 
 class QuotationController extends Controller
 {
@@ -18,32 +16,23 @@ class QuotationController extends Controller
     private QuotationUseCase $quotationUseCase;
 
     function __construct(
-        QuotationUseCase $quotationUseCase
+        QuotationUseCase $quotationUseCase,
     ) {
         $this->quotationUseCase = $quotationUseCase;
     }
 
-    public function quote(Request $request): JsonResponse
+    public function quote(QuotationRequest $request): JsonResponse
     {
 
-        $request->validate([
-            'age' => 'required|regex:/^\d+(,\d+)*$/',
-            'currency_id' => 'required|in:EUR,GBP,USD',
-            'start_date' => 'required|date_format:Y-m-d',
-            'end_date' => 'required|date_format:Y-m-d',
-        ]);
+        [
+            'ages' => $ages,
+            'currency_id' => $currency_id,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'agent_id' => $agent_id,
+        ] = $request->validated();
 
         try {
-            $age = $request->get('age');
-            $currency_id = $request->get('currency_id');
-            $start_date = $request->get('start_date');
-            $end_date = $request->get('end_date');
-
-            $ages = array_map('intval', array_filter(explode(',', $age)));
-            $start_date = DateTime::createFromFormat('Y-m-d', $start_date);
-            $end_date = DateTime::createFromFormat('Y-m-d', $end_date);
-
-            $agentId = Auth::id();
 
             /** @var QuotationUseCaseOutput $output */
             $output = $this->quotationUseCase->execute(
@@ -51,7 +40,7 @@ class QuotationController extends Controller
                 $currency_id,
                 $start_date,
                 $end_date,
-                $agentId
+                $agent_id
             );
 
             return response()->json([

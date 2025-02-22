@@ -4,24 +4,30 @@ namespace App\UseCases;
 
 use DateTime;
 
+use App\Domain\Entities\AgeLoad\AgeLoadInterface;
 use App\Repositories\QuotationRepository;
 use App\Repositories\PersonalQuotationRepository;
 use App\Domain\Entities\Quotation;
 use App\Domain\Entities\PersonalQuotation;
 use App\Models\QuotationModel;
+use App\Repositories\Interfaces\PersonalQuotationRepositoryInterface;
+use App\Repositories\Interfaces\QuotationRepositoryInterface;
 
 class QuotationUseCase
 {
 
-    private QuotationRepository $quotationRepository;
-    private PersonalQuotationRepository $personalQuotationRepository;
+    private QuotationRepositoryInterface $quotationRepository;
+    private PersonalQuotationRepositoryInterface $personalQuotationRepository;
+    private AgeLoadInterface $age_load;
 
     function __construct(
         QuotationRepository $quotationRepository,
         PersonalQuotationRepository $personalQuotationRepository,
+        AgeLoadInterface $age_load
     ) {
         $this->quotationRepository = $quotationRepository;
         $this->personalQuotationRepository = $personalQuotationRepository;
+        $this->age_load = $age_load;
     }
 
     function execute(
@@ -29,10 +35,10 @@ class QuotationUseCase
         string $currency_id,
         Datetime $start_date,
         Datetime $end_date,
-        string $agentId,
+        string $agentId
     ): QuotationUseCaseOutput {
 
-        $quotation = new Quotation($ages, $currency_id, $start_date, $end_date);
+        $quotation = new Quotation($this->age_load, $ages, $currency_id, $start_date, $end_date);
         $quotationTotal = $quotation->getTotal();
 
         /** @var QuotationModel $quotationModel */

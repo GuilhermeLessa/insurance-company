@@ -3,6 +3,8 @@
 namespace App\Domain\Entities;
 
 use DateTime;
+
+use App\Domain\Entities\AgeLoad\AgeLoadInterface;
 use DomainException;
 
 class PersonalQuotation
@@ -13,6 +15,7 @@ class PersonalQuotation
     private float $age_load_fare = 0;
 
     function __construct(
+        AgeLoadInterface $age_load,
         int $age,
         Datetime $start_date,
         Datetime $end_date
@@ -25,7 +28,7 @@ class PersonalQuotation
         }
 
         $this->age = $age;
-        $this->age_load_fare = (new AgeLoad())->getFare($age);
+        $this->age_load_fare = $age_load->getFare($age);
         $trip_length = $start_date->diff($end_date)->days + 1;
         $this->total = Quotation::RATE * $this->age_load_fare * $trip_length;
     }

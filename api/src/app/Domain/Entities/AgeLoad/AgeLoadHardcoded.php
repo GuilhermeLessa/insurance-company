@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Domain\Entities;
+namespace App\Domain\Entities\AgeLoad;
 
-class AgeLoad
+use App\Domain\Entities\AgeLoad\AgeLoadInterface;
+
+class AgeLoadHardcoded implements AgeLoadInterface
 {
 
     private array $fares = [

@@ -3,6 +3,9 @@
 namespace App\Domain\Entities;
 
 use DateTime;
+
+use App\Domain\Entities\AgeLoad\AgeLoadInterface;
+use App\Domain\Entities\PersonalQuotation;
 use DomainException;
 
 class Quotation
@@ -15,6 +18,7 @@ class Quotation
     private array $personalQuotations = [];
 
     function __construct(
+        AgeLoadInterface $age_load,
         array $ages,
         string $currency_id,
         Datetime $start_date,
@@ -25,7 +29,7 @@ class Quotation
         }
 
         foreach ($ages as $age) {
-            $personalQuotation = new PersonalQuotation($age, $start_date, $end_date);
+            $personalQuotation = new PersonalQuotation($age_load, $age, $start_date, $end_date);
             $this->total += $personalQuotation->getTotal();
             $this->personalQuotations[] = $personalQuotation;
         }
