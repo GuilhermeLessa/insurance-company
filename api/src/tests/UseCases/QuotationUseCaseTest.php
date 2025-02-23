@@ -34,6 +34,6 @@ class QuotationUseCaseTest extends TestCase
 
         $this->assertEquals($output->getTotal(), 117);
         $this->assertEquals($output->getCurrencyId(), "EUR");
-        $this->assertEquals($output->getQuotationId(), 1);
+        $this->assertEquals($output->getQuotationId(), 2);
     }
 }

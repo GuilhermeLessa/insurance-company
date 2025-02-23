@@ -34,7 +34,11 @@ class QuotationRequest extends FormRequest
 
     public function validated($key = null, $default = null)
     {
-        $data = parent::validated();
+        $data = $this->parentValidated();
         return $this->transformer->transform($data);
+    }
+
+    public function parentValidated() {
+        return parent::validated();
     }
 }

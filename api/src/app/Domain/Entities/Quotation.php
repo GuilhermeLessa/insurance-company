@@ -2,8 +2,6 @@
 
 namespace App\Domain\Entities;
 
-use DateTime;
-
 use App\Domain\Exceptions\InvalidCurrencyIdException;
 use App\Domain\Exceptions\InvalidAgentIdException;
 use App\Domain\Entities\Traveler;

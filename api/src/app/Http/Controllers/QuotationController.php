@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Exception;
+use Throwable;
 
 use App\UseCases\QuotationUseCase;
 use App\UseCases\QuotationUseCaseOutput;
@@ -52,7 +52,7 @@ class QuotationController extends Controller
             return response()->json([
                 "message" => $e->getMessage()
             ], 422);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return response()->json([
                 "message" => "Error quoting."
             ], 500);
